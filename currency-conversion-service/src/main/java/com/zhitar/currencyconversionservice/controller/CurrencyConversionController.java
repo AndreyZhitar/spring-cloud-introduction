@@ -4,6 +4,7 @@ import com.zhitar.currencyconversionservice.dto.CurrencyDto;
 import com.zhitar.currencyconversionservice.dto.ExchangeDto;
 import com.zhitar.currencyconversionservice.service.CurrencyExchangeClient;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+@Slf4j
 @RestController
 @AllArgsConstructor
 public class CurrencyConversionController {
@@ -33,7 +35,10 @@ public class CurrencyConversionController {
     public CurrencyDto convertCurrencyFeign(
             @PathVariable String from, @PathVariable String to, @PathVariable BigDecimal quantity) {
         ExchangeDto exchangeDto = feignExchangeClient.convertCurrency(from, to);
-        return map(exchangeDto, quantity);
+        log.info("ExchangeDto - {}", exchangeDto);
+        CurrencyDto map = map(exchangeDto, quantity);
+        log.info("CurrencyDto - {}", map);
+        return map;
     }
 
     private CurrencyDto map(ExchangeDto exchangeDto, BigDecimal quantity) {
